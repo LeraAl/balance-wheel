@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dynamic Input Fields</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #inputContainer {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin: 5px;
+            margin-left: 0;
+        }
+
+        button {
+            padding: 8px 12px;
+            background-color: #007bff;
+            /* Updated to blue color */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0069d9;
+            /* Updated hover color */
+        }
+    </style>
+    <script>
+        // Function to log input values to the console
+        function logInputValues() {
+            var inputs = document.querySelectorAll('input');
+            var values = Array.from(inputs).map(function (input) {
+                return input.value;
+            });
+            console.log(values);
+        }
+
+        // Function to add a new input field
+        function addInput() {
+            var container = document.getElementById('inputContainer');
+            var input = document.createElement('input');
+            input.type = 'text';
+            input.addEventListener('input', logInputValues); // Log values when input changes
+            container.appendChild(input);
+        }
+    </script>
+</head>
+
+<body>
+    <div id="inputContainer">
+        <input type="text" oninput="logInputValues()" />
+    </div>
+    <button onclick="addInput()">Add</button>
+</body>
+
+</html>
