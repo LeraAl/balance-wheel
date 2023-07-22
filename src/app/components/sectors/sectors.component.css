@@ -1,0 +1,29 @@
+.sectors-container {
+  width: -w;
+}
+
+
+.sectors-header h2 {
+  display: inline-block;
+  padding-right: 5px;
+}
+
+.sectors-header img {
+  width: 20px;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.sectors-header img:hover {
+  width: 24px;
+}
+
+.sectors-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.sector-item {
+  flex-basis: 50%;
+}

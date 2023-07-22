@@ -4,9 +4,11 @@
 ////////////////// VisualCinnamon.com ///////////////////
 /////////// Inspired by the code of alangrafu ///////////
 /////////////////////////////////////////////////////////
+
+import * as d3 from "d3";
 	
-function RadarChart(id, data, options) {
-	var cfg = {
+export function RadarChart(id: string, data:any[], options: { [x: string]: any; }) {
+	var cfg: any = {
 	 w: 600,				//Width of the circle
 	 h: 600,				//Height of the circle
 	 margin: {top: 20, right: 20, bottom: 20, left: 20}, //The margins of the SVG
@@ -19,7 +21,7 @@ function RadarChart(id, data, options) {
 	 opacityCircles: 0.1, 	//The opacity of the circles of each blob
 	 strokeWidth: 2, 		//The width of the stroke around each blob
 	 roundStrokes: false,	//If true the area and stroke will follow a round path (cardinal-closed)
-	 color: d3.scale.category10()	//Color function
+	 color: d3.scaleOrdinal(d3.schemeCategory10)	//Color function
 	};
 	
 	//Put all of the options into a variable called cfg
@@ -32,14 +34,14 @@ function RadarChart(id, data, options) {
 	//If the supplied maxValue is smaller than the actual one, replace by the max in the data
 	var maxValue = cfg.maxValue;// Math.max(cfg.maxValue, d3.max(data, function(i){return d3.max(i.map(function(o){return o.value;}))}));
 		
-	var allAxis = (data[0].map(function(i, j){return i.axis})),	//Names of each axis
+	var allAxis = (data[0].map(function(i: { axis: any; }, j: any){return i.axis})),	//Names of each axis
 		total = allAxis.length,					//The number of different axes
 		radius = Math.min(cfg.w/2, cfg.h/2), 	//Radius of the outermost circle
-		Format = (v) => v,			 	//Percentage formatting
+		Format = (v: number) => v,			 	//Percentage formatting
 		angleSlice = Math.PI * 2 / total;		//The width in radians of each "slice"
 	
 	//Scale for the radius
-	var rScale = d3.scale.linear()
+	var rScale = (d3 as any).scaleLinear()
 		.range([0, radius])
 		.domain([0, maxValue]);
 		
@@ -129,7 +131,7 @@ function RadarChart(id, data, options) {
 		.attr("dy", "0.35em")
 		.attr("x", function(d, i){ return rScale(maxValue * cfg.labelFactor) * Math.cos(angleSlice*i - Math.PI/2); })
 		.attr("y", function(d, i){ return rScale(maxValue * cfg.labelFactor) * Math.sin(angleSlice*i - Math.PI/2); })
-		.text(function(d){return d})
+		.text(function(d: any){return d})
 		.call(wrap, cfg.wrapWidth);
 
 	/////////////////////////////////////////////////////////
@@ -137,13 +139,13 @@ function RadarChart(id, data, options) {
 	/////////////////////////////////////////////////////////
 	
 	//The radial line function
-	var radarLine = d3.svg.line.radial()
-		.interpolate("linear-closed")
-		.radius(function(d) { return rScale(d.value); })
-		.angle(function(d,i) {	return i*angleSlice; });
+	var radarLine = d3.lineRadial()
+	.curve(d3.curveLinearClosed)
+	.radius((d: any) => { return rScale(d.value); })
+	.angle(function(d: any,i: number) {	return i*angleSlice; });
 		
 	if(cfg.roundStrokes) {
-		radarLine.interpolate("cardinal-closed");
+		radarLine.curve(d3.curveCardinalClosed);
 	}
 				
 	//Create a wrapper for the blobs	
@@ -191,8 +193,8 @@ function RadarChart(id, data, options) {
 		.enter().append("circle")
 		.attr("class", "radarCircle")
 		.attr("r", cfg.dotRadius)
-		.attr("cx", function(d,i){ return rScale(d.value) * Math.cos(angleSlice*i - Math.PI/2); })
-		.attr("cy", function(d,i){ return rScale(d.value) * Math.sin(angleSlice*i - Math.PI/2); })
+		.attr("cx", function(d: any,i){ return rScale(d.value) * Math.cos(angleSlice*i - Math.PI/2); })
+		.attr("cy", function(d: any,i){ return rScale(d.value) * Math.sin(angleSlice*i - Math.PI/2); })
 		.style("fill", function(d,i,j) { return cfg.color(j); })
 		.style("fill-opacity", 0.8);
 
@@ -212,13 +214,13 @@ function RadarChart(id, data, options) {
 		.enter().append("circle")
 		.attr("class", "radarInvisibleCircle")
 		.attr("r", cfg.dotRadius*1.5)
-		.attr("cx", function(d,i){ return rScale(d.value) * Math.cos(angleSlice*i - Math.PI/2); })
-		.attr("cy", function(d,i){ return rScale(d.value) * Math.sin(angleSlice*i - Math.PI/2); })
+		.attr("cx", function(d: any,i){ return rScale(d.value) * Math.cos(angleSlice*i - Math.PI/2); })
+		.attr("cy", function(d: any,i){ return rScale(d.value) * Math.sin(angleSlice*i - Math.PI/2); })
 		.style("fill", "none")
 		.style("pointer-events", "all")
 		.on("mouseover", function(d,i) {
-			newX =  parseFloat(d3.select(this).attr('cx')) - 10;
-			newY =  parseFloat(d3.select(this).attr('cy')) - 10;
+			let newX =  parseFloat(d3.select(this).attr('cx')) - 10;
+			let newY =  parseFloat(d3.select(this).attr('cy')) - 10;
 					
 			tooltip
 				.attr('x', newX)
@@ -243,12 +245,12 @@ function RadarChart(id, data, options) {
 
 	//Taken from http://bl.ocks.org/mbostock/7555321
 	//Wraps SVG text	
-	function wrap(text, width) {
-	  text.each(function() {
-		var text = d3.select(this),
+	function wrap(text: { each: (arg0: () => void) => void; }, width: number) {
+	  text.each(function(this: any) {
+		var text = d3.select<any, any>(this),
 			words = text.text().split(/\s+/).reverse(),
 			word,
-			line = [],
+			line: string[] = [],
 			lineNumber = 0,
 			lineHeight = 1.4, // ems
 			y = text.attr("y"),
@@ -259,7 +261,7 @@ function RadarChart(id, data, options) {
 		while (word = words.pop()) {
 		  line.push(word);
 		  tspan.text(line.join(" "));
-		  if (tspan.node().getComputedTextLength() > width) {
+		  if (tspan.node()!.getComputedTextLength() > width) {
 			line.pop();
 			tspan.text(line.join(" "));
 			line = [word];
@@ -268,5 +270,10 @@ function RadarChart(id, data, options) {
 		}
 	  });
 	}//wrap	
+
+	return svg;
 	
 }//%
+
+
+export const color = d3.scaleOrdinal().range(["#00A0B0"]);
