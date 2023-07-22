@@ -1,0 +1,23 @@
+<div>
+    <div>
+        <label for="numSectors">Number of Sectors:</label>
+        <input type="number" id="numSectors" min="0" max="20" [(ngModel)]="numSectors" (input)="updateSectorInputs()" />
+    </div>
+    <div>
+        <div *ngFor="let sector of sectors; let i = index" class="sector-container">
+            <div class="input-container">
+                <input type="text" [id]="'sectorInput-' + sector" [(ngModel)]="sector.axis" />
+                <span class="delete-icon" (click)="deleteSector(i)">
+                    <img src="/assets/cross.svg">
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <button class="add" (click)="addInput()">Add Sector</button>
+    <button class="save" (click)="save()">Save</button>
+    <button class="cancel" (click)="cancel()">Cancel</button>
+</div>

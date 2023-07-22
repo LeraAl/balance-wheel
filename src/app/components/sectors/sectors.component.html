@@ -1,0 +1,17 @@
+<div class="sectors-container">
+    <div class="sectors-header">
+        <h2>Sectors</h2><span><img src="/assets/gear.svg" (click)="openDialog()"></span>
+    </div>
+    <div class="sectors-list">
+        <div class="sector-item" *ngFor="let x of sectors; let i = index;trackBy:trackByIdx">
+            <p>{{x.axis}} : {{x.value}}</p>
+            <input type="range" min="0" max="10" [(ngModel)]="sectors[i].value" (ngModelChange)="updateSectors()">
+        </div>
+    </div>
+</div>
+
+
+<dialog class="sectors-dialog" #dialog>
+    <app-menu-dialog *ngIf="isDialogOpened" (sectorsChanged)="sectorsChanged($event)"
+        (cancelClicked)="closeDialog()"></app-menu-dialog>
+</dialog>
