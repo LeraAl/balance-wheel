@@ -1,6 +1,9 @@
 <div class="sectors-container">
     <div class="sectors-header">
-        <h2>Sectors</h2><span><img src="./assets/gear.svg" (click)="openDialog()"></span>
+        <h2>Sectors</h2>
+        <button class="btn" (click)="openDialog()">
+            <img src="./assets/gear.svg">
+        </button>
     </div>
     <div class="sectors-list">
         <div class="sector-item" *ngFor="let x of sectors; let i = index;trackBy:trackByIdx">

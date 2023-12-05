@@ -65,9 +65,16 @@ export class WheelComponent implements OnInit, OnDestroy {
     html2canvas(svgElement).then((canvas) => {
       const link = document.createElement('a');
       link.href = canvas.toDataURL();
-      link.download = 'image.png';
+      link.download = this.getImageName();
       link.click();
     });
+  }
+
+  private getImageName(): string {
+    const date = new Date().toISOString().slice(0, 10);
+    const filename = `balanceWheel_${date}.png`;
+    
+    return filename;
   }
 
 
